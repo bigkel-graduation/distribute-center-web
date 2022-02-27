@@ -1,6 +1,6 @@
 import request from "./request";
+
 //按需导出每个请求
-console.log("request", request);
 export default {
   // 登录接口
   login(body) {

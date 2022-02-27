@@ -55,7 +55,7 @@
 <script>
 import axios from "axios";
 import CameraPreview from "../components/cameraPreview.vue";
-import api from "../request/api";
+import api from "../request/userManageApi";
 export default {
   inject: ["reload"],
   name: "login",

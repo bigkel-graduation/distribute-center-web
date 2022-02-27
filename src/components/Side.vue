@@ -85,7 +85,7 @@ export default {
             icon: "el-icon-s-custom"
           },
           {
-            name: "权限管理",
+            name: "角色管理",
             path: "/all/authority",
             icon: "el-icon-s-data"
           },

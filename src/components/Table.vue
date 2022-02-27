@@ -2,26 +2,49 @@
   <div class="table">
     <!--查询表单-->
     <el-form :inline="true" class="demo-form-inline">
-      <el-form-item label="关键字">
-        <el-input v-model="searchObj.key" placeholder="手机号/用户名" />
+      <el-form-item label="关键字" style="margin-top: 10px;margin-left: 10px">
+        <el-input
+          size="medium"
+          v-model="searchObj.key"
+          placeholder="手机号/用户名"
+        />
       </el-form-item>
 
-      <el-form-item label="用户状态">
-        <el-select v-model="searchObj.status" placeholder="请选择" clearable>
+      <el-form-item label="用户状态" style="margin-top: 10px;">
+        <el-select
+          size="medium"
+          v-model="searchObj.status"
+          placeholder="请选择"
+          clearable
+        >
           <el-option label="正常" value="0" />
           <el-option label="锁定" value="1" />
         </el-select>
       </el-form-item>
 
-      <el-button type="primary" icon="el-icon-search" @click="fetchData()">
+      <el-button
+        type="primary"
+        icon="el-icon-search"
+        @click="fetchData()"
+        style="margin-top: 13px;"
+        size="medium"
+      >
         查询
       </el-button>
-      <el-button type="default" @click="resetData()">清空</el-button>
+      <el-button
+        type="default"
+        @click="resetData()"
+        style="margin-top: 13px;"
+        size="medium"
+        >清空</el-button
+      >
       <el-button
         type="success"
         plain
         @click="handleAddClick()"
         :disabled="buttonDisable"
+        style="margin-top: 13px;"
+        size="medium"
         >新增用户</el-button
       >
     </el-form>
@@ -30,6 +53,7 @@
     <el-table
       v-loading="loading"
       :data="list"
+      height="450"
       style="width:100%;margin-top: 10px;"
       class="elTable"
       :cell-style="{ padding: '5px' }"
@@ -173,7 +197,7 @@
 </template>
 
 <script>
-import api from "../request/api";
+import userManageApi from "../request/userManageApi";
 export default {
   name: "tabledata",
   data() {
@@ -203,8 +227,7 @@ export default {
         value: "id",
         label: "name",
         children: "cityList"
-      },
-      afterChangeRole: null
+      }
     };
   },
 
@@ -234,10 +257,12 @@ export default {
     },
     // 获取列表
     fetchData() {
-      api.getUserList(this.page, this.limit, this.searchObj).then(response => {
-        this.list = response.data.userList.list;
-        this.total = response.data.userList.total;
-      });
+      userManageApi
+        .getUserList(this.page, this.limit, this.searchObj)
+        .then(response => {
+          this.list = response.data.userList.list;
+          this.total = response.data.userList.total;
+        });
       this.loading = false;
     },
 
@@ -291,10 +316,10 @@ export default {
     },
     handleEditUser(editUser) {
       console.log("用户被编辑后", editUser);
-      api.createOrUpdate(editUser).then(response => {
+      userManageApi.createOrUpdate(editUser).then(response => {
         this.$message({
           message: response.message,
-          type: "success",
+          type: response.code > 0 ? "success" : "error",
           duration: 1 * 1000 // 弹窗持续时间
         });
         this.fetchData();
@@ -312,7 +337,7 @@ export default {
       })
         .then(() => {
           // 点击确定删除时执行
-          return api.deleteUser(id);
+          return userManageApi.deleteUser(id);
         })
         .then(response => {
           this.$message({
@@ -326,14 +351,14 @@ export default {
 
     // 锁定\解锁(用户)
     lockOrNot(id, flag) {
-      api.lockOrNot(id, flag).then(() => {
+      userManageApi.lockOrNot(id, flag).then(() => {
         this.fetchData();
       });
     },
 
     // 获取省份
     getProvince(rolePid, roleCid) {
-      api.getProvince(rolePid, roleCid).then(response => {
+      userManageApi.getProvince(rolePid, roleCid).then(response => {
         this.provinceList = response.data.province;
       });
     },
@@ -351,6 +376,9 @@ export default {
 
 <style scoped>
 .table {
-  height: 1200px;
+  height: 612px;
+  box-shadow: 25px 25px 20px #ddd;
+  background-color: white;
+  border-radius: 5px;
 }
 </style>

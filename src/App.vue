@@ -6,29 +6,30 @@
 
 <script>
 export default {
-  name: 'App',
-  provide () {
+  name: "App",
+  provide() {
     return {
       reload: this.reload
-    }
+    };
   },
-  data () {
+  data() {
     return {
       isRouterAlive: true
-    }
+    };
   },
   methods: {
-    reload () {
-      this.isRouterAlive = false
-      this.$nextTick(function () {
-        this.isRouterAlive = true
-      })
+    reload() {
+      this.isRouterAlive = false;
+      this.$nextTick(function() {
+        this.isRouterAlive = true;
+      });
     }
   }
-}
+};
 </script>
 
 <style>
-
-
+body {
+  padding-right: 0 !important;
+}
 </style>
