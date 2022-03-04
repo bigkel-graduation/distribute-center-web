@@ -173,7 +173,6 @@
 </template>
 
 <script>
-import axios from "axios";
 import roleManageApi from "../request/roleManageApi";
 import userManageApi from "../request/userManageApi";
 export default {
@@ -230,6 +229,9 @@ export default {
       this.addRoleButton = true;
       this.delRoleButton = true;
     }
+    if (this.role_pid != 0 && this.role_cid == 0) {
+      this.pDisable = true;
+    }
     this.fetchData();
   },
 
@@ -246,7 +248,7 @@ export default {
         this.roleList = response.data.province;
       });
       this.findUserByRole(this.click_pid, this.click_cid);
-      roleManageApi.canAddRole().then(response => {
+      roleManageApi.canAddRole(this.role_pid, this.role_cid).then(response => {
         this.canAddRoleList = response.data.canAddRole;
       });
     },
@@ -324,6 +326,7 @@ export default {
         this.role.pid = val;
         this.role.cid = 0;
       }
+      console.log("当前选择的角色", val);
     },
     handleAddRole(role) {
       console.log("用户新增的角色", role);
@@ -348,9 +351,9 @@ export default {
       console.log("当前删除的角色", role);
       let tip = "";
       if (role.cid == 0) {
-        tip = "以及其下级角色及其用户";
+        tip = "以及其下级角色及其用户,";
       }
-      this.$confirm(`此操作将删除: 该角色及其用户,${tip}, 是否继续?`, "提示", {
+      this.$confirm(`此操作将删除: 该角色及其用户,${tip} 是否继续?`, "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
@@ -366,54 +369,10 @@ export default {
             duration: 1 * 1000 // 弹窗持续时间
           });
           this.fetchData();
+          this.role.pid = null;
+          this.role.cid = null;
         });
-    },
-
-    //登录事件
-    loadBtn() {
-      // 我暂时就不模拟了，直接取
-      /* console.log(returnCitySN);*/
-      if (this.info.phone.length == 0 || this.info.password.length == 0) {
-        this.$message.error("请输入完整用户名和密码");
-      } else {
-        var self = this;
-        axios
-          .post("http://10.11.47.145:8081/User/login", this.info)
-          .then(res => {
-            console.log(res);
-            if (res.data.code == 200) {
-              this.$message.success(res.data.message);
-              var token = res.data.data.token;
-              var role = "老板";
-              window.localStorage.setItem("token", token);
-              window.localStorage.setItem("role", role);
-              window.localStorage.setItem("userPhone", self.info.phone);
-              window.localStorage.setItem("affiliation", res.data.affiliation);
-              setTimeout(function() {
-                self.$router.replace("/all");
-              }, 800);
-            } else {
-              this.$message.error(res.data.message);
-            }
-          });
-      }
-    },
-
-    //阻止表单提交
-    onSubmit() {
-      return false;
-    },
-
-    changelong() {
-      this.$refs.line.style.width = "183px";
-    },
-
-    changeshort() {
-      this.$refs.line.style.width = "0px";
-    },
-
-    transfer() {
-      this.$router.push("/sanfang");
+      this.delBox = false;
     }
   }
 };

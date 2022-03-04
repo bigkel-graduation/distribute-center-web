@@ -1,4 +1,3 @@
-import atImport from "postcss-import";
 import request from "./request";
 
 export default {
@@ -19,9 +18,9 @@ export default {
   },
 
   // 拿到能够新增的角色列表
-  canAddRole() {
+  canAddRole(pid, cid) {
     return request({
-      url: `/api/role/can_add_role_list`,
+      url: `/api/role/can_add_role_list/${pid}/${cid}`,
       method: "get"
     });
   },
