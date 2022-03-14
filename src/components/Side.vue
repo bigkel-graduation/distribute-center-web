@@ -100,7 +100,7 @@ export default {
             icon: "el-icon-place"
           },
           {
-            name: "趋势预测图",
+            name: "服务趋势",
             path: "/all/trendprediction",
             icon: "el-icon-menu"
           },

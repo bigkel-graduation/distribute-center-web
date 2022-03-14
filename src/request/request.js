@@ -48,6 +48,9 @@ service.interceptors.response.use(
       Message.error({ message: res.message });
       router.replace("/login");
       return;
+    } else if (res.code === -200) {
+      Message.error({ message: res.message });
+      return;
     }
     return res;
   },

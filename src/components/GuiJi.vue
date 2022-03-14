@@ -16,109 +16,118 @@
 </template>
 
 <script>
-  import '@/assets/js/flexible'
-  import '@/assets/js/china'
-  import axios from 'axios'
-  import echarts from 'echarts'
-  export default {
-    name: 'guiji',
-    data() {
-      return {
-        houtai:{
-          // 杭州: [120.153576,30.287459],
-          // 上海: [121.4648, 31.2891],
-          // 东莞: [113.8953, 22.901],
-        },
-        XAData:[],
-        geoCoordMap: {},
-      }
-    },
-    computed: {
+import "@/assets/js/flexible";
+import "@/assets/js/china";
+import axios from "axios";
+import echarts from "echarts";
+export default {
+  name: "guiji",
+  data() {
+    return {
+      houtai: {
+        // 杭州: [120.153576,30.287459],
+        // 上海: [121.4648, 31.2891],
+        // 东莞: [113.8953, 22.901],
+      },
+      XAData: [],
+      geoCoordMap: {}
+    };
+  },
+  computed: {},
+  created() {},
+  mounted() {
+    this.getdata();
+    this.getEchart();
+    /* this.changedata(); */
+    /*this.changedata(this.houtai)*/
 
-    },
-    created() {
-
-    },
-    mounted() {
-      this.getdata();
-      this.getEchart();
-      /* this.changedata(); */
-      /*this.changedata(this.houtai)*/
-
-      /* console.log(this.geoCoordMap) */
-    },
-    methods: {
-      getdata(){
-        axios.get('http://172.20.10.5:8888/Login_Data/GetLogin_DataById?id=1').then(res=>{
-          console.log(1221)
-          console.log(res)
-          var login_data=res.data.data.login_data
-          console.log(1111)
-          var len=login_data.length
-          var lujing=[]
-          var i
-          var object={}
-          for(i=0;i<len-1;i++){
-            object[login_data[i].address]=[login_data[i].point_X*1,login_data[i].point_Y*1]
-            console.log(object)
-            var lujingdian=([{"name":login_data[i].address},{"name":login_data[i+1].address,"vaule":1}])
-            lujing.push(lujingdian)
+    /* console.log(this.geoCoordMap) */
+  },
+  methods: {
+    getdata() {
+      axios
+        .get("http://172.20.10.5:8888/Login_Data/GetLogin_DataById?id=1")
+        .then(res => {
+          console.log(1221);
+          console.log(res);
+          var login_data = res.data.data.login_data;
+          console.log(1111);
+          var len = login_data.length;
+          var lujing = [];
+          var i;
+          var object = {};
+          for (i = 0; i < len - 1; i++) {
+            object[login_data[i].address] = [
+              login_data[i].point_X * 1,
+              login_data[i].point_Y * 1
+            ];
+            console.log(object);
+            var lujingdian = [
+              { name: login_data[i].address },
+              { name: login_data[i + 1].address, vaule: 1 }
+            ];
+            lujing.push(lujingdian);
           }
-          object[login_data[len-1].address]=[login_data[len-1].point_X*1,login_data[len-1].point_Y*1]
-          console.log("111111"+object)
-          window.localStorage.setItem("point",JSON.stringify(object))
-          window.localStorage.setItem("lujing",JSON.stringify(lujing))
+          object[login_data[len - 1].address] = [
+            login_data[len - 1].point_X * 1,
+            login_data[len - 1].point_Y * 1
+          ];
+          console.log("111111" + object);
+          window.localStorage.setItem("point", JSON.stringify(object));
+          window.localStorage.setItem("lujing", JSON.stringify(lujing));
           // console.log(res.data.data.login_data[0])
-        })
-      },
-      changedata(){
-        // console.log("333")
-        // var login_data=JSON.parse(window.localStorage.getItem("res"))
-        // console.log("1222")
-        // // var city=[]
-        // //   for(var i in houtai){
-        // //       city.push(i)
-        // //   }
-        //   var len=login_data.length
-        //   var lujing=[]
-        //   var i
-        //   var object={}
-        //   for(i=0;i<len-1;i++){
-        //     // object[login_data[i].address]=[login_data[i].point_X*1,login_data[i].point_Y*1]
-        //     // console.log(object)
-        //     // var lujingdian=([{"name":login_data[i].address},{"name":login_data[i+1].address,"vaule":1}])
-        //     // lujing.push(lujingdian)
-        //   }
-        //   // object[login_data[len-1].address]=[login_data[len].point_X*1,login_data[len].point_Y*1]
-        //   console.log("111111"+object)
-        //   window.localStorage.setItem("point",JSON.stringify(object))
-        //   window.localStorage.setItem("lujing",JSON.stringify(lujing))
-        /*  console.log(JSON.stringify(lujing))
+        });
+    },
+    changedata() {
+      // console.log("333")
+      // var login_data=JSON.parse(window.localStorage.getItem("res"))
+      // console.log("1222")
+      // // var city=[]
+      // //   for(var i in houtai){
+      // //       city.push(i)
+      // //   }
+      //   var len=login_data.length
+      //   var lujing=[]
+      //   var i
+      //   var object={}
+      //   for(i=0;i<len-1;i++){
+      //     // object[login_data[i].address]=[login_data[i].point_X*1,login_data[i].point_Y*1]
+      //     // console.log(object)
+      //     // var lujingdian=([{"name":login_data[i].address},{"name":login_data[i+1].address,"vaule":1}])
+      //     // lujing.push(lujingdian)
+      //   }
+      //   // object[login_data[len-1].address]=[login_data[len].point_X*1,login_data[len].point_Y*1]
+      //   console.log("111111"+object)
+      //   window.localStorage.setItem("point",JSON.stringify(object))
+      //   window.localStorage.setItem("lujing",JSON.stringify(lujing))
+      /*  console.log(JSON.stringify(lujing))
          console.log(this.XAData) */
-        /* return resdata */
-      },
-      convertData(data) { // 地图数据转换
-        let res = [];
-        for (let i = 0; i < data.length; i++) {
-          let dataItem = data[i];
-          let fromCoord = this.geoCoordMap[dataItem[0].name];
-          let toCoord = this.geoCoordMap[dataItem[1].name];
-          if (fromCoord && toCoord) {
-            res.push({
-              fromName: dataItem[0].name,
-              toName: dataItem[1].name,
-              coords: [fromCoord, toCoord],
-              value: dataItem[1].value
-            });
-          }
+      /* return resdata */
+    },
+    convertData(data) {
+      // 地图数据转换
+      let res = [];
+      for (let i = 0; i < data.length; i++) {
+        let dataItem = data[i];
+        let fromCoord = this.geoCoordMap[dataItem[0].name];
+        let toCoord = this.geoCoordMap[dataItem[1].name];
+        if (fromCoord && toCoord) {
+          res.push({
+            fromName: dataItem[0].name,
+            toName: dataItem[1].name,
+            coords: [fromCoord, toCoord],
+            value: dataItem[1].value
+          });
         }
-        return res;
-      },
-      getEchart() { // 初始化地图数据
-        this.geoCoordMap=JSON.parse(window.localStorage.getItem("point"))
-        this.XAData=JSON.parse(window.localStorage.getItem("lujing"))
-        let myChart = echarts.init(document.getElementById('chart_map'));
-        /*  东营: [118.7073, 37.5513],
+      }
+      return res;
+    },
+    getEchart() {
+      // 初始化地图数据
+      this.geoCoordMap = JSON.parse(window.localStorage.getItem("point"));
+      this.XAData = JSON.parse(window.localStorage.getItem("lujing"));
+      let myChart = echarts.init(document.getElementById("chart_map"));
+      /*  东营: [118.7073, 37.5513],
          中山: [113.4229, 22.478],
          临汾: [111.4783, 36.1615],
          临沂: [118.3118, 35.2936],
@@ -231,441 +240,467 @@
          青岛: [120.4651, 36.3373],
          韶关: [113.7964, 24.7028] */
 
-        let planePath = "path://M1705.06,1318.313v-89.254l-319.9-221.799l0.073-208.063c0.521-84.662-26.629-121.796-63.961-121.491c-37.332-0.305-64.482,36.829-63.961,121.491l0.073,208.063l-319.9,221.799v89.254l330.343-157.288l12.238,241.308l-134.449,92.931l0.531,42.034l175.125-42.917l175.125,42.917l0.531-42.034l-134.449-92.931l12.238-241.308L1705.06,1318.313z" ;
-        let color = ["#fff", "#fff", "#fff"]; //航线的颜色
-        let series = [];
-        [
-          ["qishi",this.XAData],
-        ].forEach((item, i) => {
-          series.push(
-            {
-              name: item[0],
-              type: "lines",
-              zlevel: 10,
-              effect: {
-                show: true,
-                period: 6,
-                trailLength: 0.7,
-                color: "red", //arrow箭头的颜色
-                symbolSize: 3
-              },
-              lineStyle: {
-                normal: {
-                  color: color[i],
-                  width: 0,
-                  curveness: 0.2
-                }
-              },
-              data: this.convertData(item[1])
+      let planePath =
+        "path://M1705.06,1318.313v-89.254l-319.9-221.799l0.073-208.063c0.521-84.662-26.629-121.796-63.961-121.491c-37.332-0.305-64.482,36.829-63.961,121.491l0.073,208.063l-319.9,221.799v89.254l330.343-157.288l12.238,241.308l-134.449,92.931l0.531,42.034l175.125-42.917l175.125,42.917l0.531-42.034l-134.449-92.931l12.238-241.308L1705.06,1318.313z";
+      let color = ["#fff", "#fff", "#fff"]; //航线的颜色
+      let series = [];
+      [["qishi", this.XAData]].forEach((item, i) => {
+        series.push(
+          {
+            name: item[0],
+            type: "lines",
+            zlevel: 10,
+            effect: {
+              show: true,
+              period: 6,
+              trailLength: 0.7,
+              color: "red", //arrow箭头的颜色
+              symbolSize: 3
             },
-            {
-              name: item[0] + " Top3",
-              type: "lines",
-              zlevel: 2,
-              symbol: ["none", "arrow"],
-              symbolSize: 10,
-              effect: {
-                show: true,
-                period: 6,
-                trailLength: 0,
-                symbol: planePath,
-                symbolSize: 15
-              },
-              lineStyle: {
-                normal: {
-                  color: color[i],
-                  width: 1,
-                  opacity: 0.6,
-                  curveness: 0.2
-                }
-              },
-              data: this.convertData(item[1])
-            },
-            {
-              name: item[0] + " Top3",
-              type: "effectScatter",
-              coordinateSystem: "geo",
-              zlevel: 2,
-              rippleEffect: {
-                brushType: "stroke"
-              },
-              label: {
-                normal: {
-                  show: true,
-                  position: "right",
-                  formatter: "{b}"
-                }
-              },
-              symbolSize: (val) => {
-                return val[2] / 8;
-              },
-              itemStyle: {
-                normal: {
-                  color: color[i]
-                },
-                emphasis: {
-                  areaColor: "#2B91B7"
-                }
-              },
-              data: item[1].map((dataItem) => {
-                return {
-                  /*   name: dataItem[1].name, */
-                  value: this.geoCoordMap[dataItem[1].name].concat([dataItem[1].value])
-                };
-              })
-            }
-          );
-        });
-
-        let option = {
-          tooltip: {
-            trigger: "item",
-            formatter: (params, ticket, callback) => {
-              if (params.seriesType == "effectScatter") {
-                return "线路：" + params.data.name + "" + params.data.value[2];
-              } else if (params.seriesType == "lines") {
-                return (
-                  params.data.fromName +
-                  ">" +
-                  params.data.toName +
-                  "<br />"
-                );
-              } else {
-                return params.name;
+            lineStyle: {
+              normal: {
+                color: color[i],
+                width: 0,
+                curveness: 0.2
               }
-            }
+            },
+            data: this.convertData(item[1])
           },
-          geo: {
-            map: "china",
-            aspectScale: 0.75,
-            scaleLimit: { // 放大缩小最大比例限制
-              min: 0.8,
-              max: 4,
+          {
+            name: item[0] + " Top3",
+            type: "lines",
+            zlevel: 2,
+            symbol: ["none", "arrow"],
+            symbolSize: 10,
+            effect: {
+              show: true,
+              period: 6,
+              trailLength: 0,
+              symbol: planePath,
+              symbolSize: 15
+            },
+            lineStyle: {
+              normal: {
+                color: color[i],
+                width: 1,
+                opacity: 0.6,
+                curveness: 0.2
+              }
+            },
+            data: this.convertData(item[1])
+          },
+          {
+            name: item[0] + " Top3",
+            type: "effectScatter",
+            coordinateSystem: "geo",
+            zlevel: 2,
+            rippleEffect: {
+              brushType: "stroke"
             },
             label: {
-              emphasis: {
+              normal: {
                 show: true,
-                color: "#fff"
+                position: "right",
+                formatter: "{b}"
               }
             },
-            roam: true,
-            //   放大我们的地图
-            zoom: 1,
+            symbolSize: val => {
+              return val[2] / 8;
+            },
             itemStyle: {
               normal: {
-                areaColor: "rgba(43, 196, 243, 0.42)",
-                borderColor: "rgba(43, 196, 243, 1)",
-                borderWidth: 1
+                color: color[i]
               },
               emphasis: {
                 areaColor: "#2B91B7"
               }
+            },
+            data: item[1].map(dataItem => {
+              return {
+                /*   name: dataItem[1].name, */
+                value: this.geoCoordMap[dataItem[1].name].concat([
+                  dataItem[1].value
+                ])
+              };
+            })
+          }
+        );
+      });
+
+      let option = {
+        tooltip: {
+          trigger: "item",
+          formatter: (params, ticket, callback) => {
+            if (params.seriesType == "effectScatter") {
+              return "线路：" + params.data.name + "" + params.data.value[2];
+            } else if (params.seriesType == "lines") {
+              return params.data.fromName + ">" + params.data.toName + "<br />";
+            } else {
+              return params.name;
+            }
+          }
+        },
+        geo: {
+          map: "china",
+          aspectScale: 0.75,
+          scaleLimit: {
+            // 放大缩小最大比例限制
+            min: 0.8,
+            max: 4
+          },
+          label: {
+            emphasis: {
+              show: true,
+              color: "#fff"
             }
           },
-          series: series
-        }
+          roam: true,
+          //   放大我们的地图
+          zoom: 1,
+          itemStyle: {
+            normal: {
+              areaColor: "rgba(43, 196, 243, 0.42)",
+              borderColor: "rgba(43, 196, 243, 1)",
+              borderWidth: 1
+            },
+            emphasis: {
+              areaColor: "#2B91B7"
+            }
+          }
+        },
+        series: series
+      };
 
-        myChart.setOption(option, true);
-        window.addEventListener("resize", () => {
-          myChart.resize();
-        });
-      }
-    },
+      myChart.setOption(option, true);
+      window.addEventListener("resize", () => {
+        myChart.resize();
+      });
+    }
   }
+};
 </script>
 
 <style scoped>
-  .brand-container {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    margin-top:-30px;
-    margin-left:-22px;
-    width: 1350px;
-    height:730px;
-    background: #000;
+.brand-container {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  margin-top: -30px;
+  margin-left: -22px;
+  width: 1350px;
+  height: 730px;
+  background: #000;
+}
 
-  }
+.brand-container .wrap {
+  background: url(../assets/img/brand/bg.jpg) no-repeat #000;
+  background-size: cover;
+  -webkit-background-size: cover;
+  -o-background-size: cover;
+  line-height: 1.15;
+}
 
-  .brand-container .wrap {
-    background: url(../assets/img/brand/bg.jpg) no-repeat #000;
-    background-size: cover;
-    -webkit-background-size: cover;
-    -o-background-size: cover;
-    line-height: 1.15;
-  }
+.brand-container .wrap .mainbox {
+  min-width: 1024px;
+  max-width: 1920px;
+  padding: 0.125rem 0.125rem 0;
+  display: flex;
+}
 
-  .brand-container .wrap .mainbox {
-    min-width: 1024px;
-    max-width: 1920px;
-    padding: 0.125rem 0.125rem 0;
-    display: flex;
-  }
+.brand-container .wrap .mainbox .item {
+  flex: 3;
+}
 
-  .brand-container .wrap .mainbox .item {
-    flex: 3;
-  }
+.brand-container .wrap .mainbox .item.center {
+  flex: 5;
+  margin: 0 0.125rem 0.1rem;
+  overflow: hidden;
+}
 
-  .brand-container .wrap .mainbox .item.center {
-    flex: 5;
-    margin: 0 0.125rem 0.1rem;
-    overflow: hidden;
-  }
+.brand-container .wrap .mainbox .item.center .resume {
+  background: rgba(101, 132, 226, 0.1);
+  padding: 0.1875rem;
+}
 
-  .brand-container .wrap .mainbox .item.center .resume {
-    background: rgba(101, 132, 226, 0.1);
-    padding: 0.1875rem;
-  }
+.brand-container .wrap .mainbox .item.center .resume .resume-hd {
+  position: relative;
+  border: 1px solid rgba(25, 186, 139, 0.17);
+}
 
-  .brand-container .wrap .mainbox .item.center .resume .resume-hd {
-    position: relative;
-    border: 1px solid rgba(25, 186, 139, 0.17);
-  }
+.brand-container .wrap .mainbox .item.center .resume .resume-hd ul {
+  display: flex;
+}
 
-  .brand-container .wrap .mainbox .item.center .resume .resume-hd ul {
-    display: flex;
-  }
+.brand-container
+  .wrap
+  .mainbox
+  .item.center
+  .resume
+  .resume-hd
+  ul
+  li:nth-child(2):before,
+.brand-container
+  .wrap
+  .mainbox
+  .item.center
+  .resume
+  .resume-hd
+  ul
+  li:nth-child(2):after {
+  content: "";
+  position: absolute;
+  height: 50%;
+  width: 1px;
+  background: rgba(255, 255, 255, 0.2);
+  top: 25%;
+}
 
-  .brand-container .wrap .mainbox .item.center .resume .resume-hd ul li:nth-child(2):before, .brand-container .wrap .mainbox .item.center .resume .resume-hd ul li:nth-child(2):after {
-    content: "";
-    position: absolute;
-    height: 50%;
-    width: 1px;
-    background: rgba(255, 255, 255, 0.2);
-    top: 25%;
-  }
+.brand-container .wrap .mainbox .item.center .resume .resume-hd ul li {
+  position: relative;
+  flex: 1;
+  text-align: center;
+  height: 1.2rem;
+  line-height: 1.2rem;
+  font-size: 0.65rem;
+  color: #ffeb7b;
+  padding: 0.05rem 0;
+  font-family: "DIGITALDREAMFAT";
+  font-weight: bold;
+}
 
-  .brand-container .wrap .mainbox .item.center .resume .resume-hd ul li {
-    position: relative;
-    flex: 1;
-    text-align: center;
-    height: 1.2rem;
-    line-height: 1.2rem;
-    font-size: 0.65rem;
-    color: #ffeb7b;
-    padding: 0.05rem 0;
-    font-family: 'DIGITALDREAMFAT';
-    font-weight: bold;
-  }
+.brand-container
+  .wrap
+  .mainbox
+  .item.center
+  .resume
+  .resume-hd
+  ul
+  li:nth-child(2):after {
+  right: 0;
+}
 
-  .brand-container .wrap .mainbox .item.center .resume .resume-hd ul li:nth-child(2):after {
-    right: 0;
-  }
+.brand-container
+  .wrap
+  .mainbox
+  .item.center
+  .resume
+  .resume-hd
+  ul
+  li:nth-child(2):before {
+  left: 0;
+}
 
-  .brand-container .wrap .mainbox .item.center .resume .resume-hd ul li:nth-child(2):before {
-    left: 0;
-  }
+.brand-container .wrap .mainbox .item.center .resume .resume-hd:before {
+  content: "";
+  position: absolute;
+  width: 30px;
+  height: 10px;
+  border-top: 2px solid #02a6b5;
+  border-left: 2px solid #02a6b5;
+  top: 0;
+  left: 0;
+}
 
-  .brand-container .wrap .mainbox .item.center .resume .resume-hd:before {
-    content: "";
-    position: absolute;
-    width: 30px;
-    height: 10px;
-    border-top: 2px solid #02a6b5;
-    border-left: 2px solid #02a6b5;
-    top: 0;
-    left: 0;
-  }
+.brand-container .wrap .mainbox .item.center .resume .resume-hd:after {
+  content: "";
+  position: absolute;
+  width: 30px;
+  height: 10px;
+  border-bottom: 2px solid #02a6b5;
+  border-right: 2px solid #02a6b5;
+  right: 0;
+  bottom: 0;
+}
 
-  .brand-container .wrap .mainbox .item.center .resume .resume-hd:after {
-    content: "";
-    position: absolute;
-    width: 30px;
-    height: 10px;
-    border-bottom: 2px solid #02a6b5;
-    border-right: 2px solid #02a6b5;
-    right: 0;
-    bottom: 0;
-  }
+.brand-container .wrap .mainbox .item.center .resume .resume-bd ul {
+  display: flex;
+}
 
-  .brand-container .wrap .mainbox .item.center .resume .resume-bd ul {
-    display: flex;
-  }
+.brand-container .wrap .mainbox .item.center .resume .resume-bd ul li {
+  flex: 1;
+  height: 0.5rem;
+  line-height: 0.5rem;
+  text-align: center;
+  font-size: 0.225rem;
+  color: rgba(255, 255, 255, 0.7);
+  padding-top: 0.125rem;
+}
 
-  .brand-container .wrap .mainbox .item.center .resume .resume-bd ul li {
-    flex: 1;
-    height: 0.5rem;
-    line-height: 0.5rem;
-    text-align: center;
-    font-size: 0.225rem;
-    color: rgba(255, 255, 255, 0.7);
-    padding-top: 0.125rem;
-  }
+.brand-container .wrap .mainbox .item .map .map3,
+.brand-container .wrap .mainbox .item .map .map2,
+.brand-container .wrap .mainbox .item .map .map1 {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 6.475rem;
+  height: 6.475rem;
+  background: url(../assets/img/brand/map.png) no-repeat;
+  background-size: 100% 100%;
+  opacity: 0.3;
+}
 
-  .brand-container .wrap .mainbox .item .map .map3, .brand-container .wrap .mainbox .item .map .map2, .brand-container .wrap .mainbox .item .map .map1 {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 6.475rem;
-    height: 6.475rem;
-    background: url(../assets/img/brand/map.png) no-repeat;
-    background-size: 100% 100%;
-    opacity: 0.3;
-  }
+.brand-container .wrap .mainbox .item .map {
+  position: relative;
+  height: 10.125rem;
+}
 
-  .brand-container .wrap .mainbox .item .map {
-    position: relative;
-    height: 10.125rem;
-  }
+.brand-container .wrap .mainbox .item .map .chart {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 5;
+  height: 10.125rem;
+  width: 100%;
+}
 
-  .brand-container .wrap .mainbox .item .map .chart {
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 5;
-    height: 10.125rem;
-    width: 100%;
-  }
+.brand-container .wrap .mainbox .item .map .map2 {
+  width: 8.0375rem;
+  height: 8.0375rem;
+  background-image: url(../assets/img/brand/lbx.png);
+  opacity: 0.6;
+  -webkit-animation: rotate 15s linear infinite;
+  animation: rotate 15s linear infinite;
+  z-index: 2;
+}
 
-  .brand-container .wrap .mainbox .item .map .map2 {
-    width: 8.0375rem;
-    height: 8.0375rem;
-    background-image: url(../assets/img/brand/lbx.png);
-    opacity: 0.6;
-    -webkit-animation: rotate 15s linear infinite;
-    animation: rotate 15s linear infinite;
-    z-index: 2;
-  }
+.brand-container .wrap .mainbox .item .map .map3 {
+  width: 7.075rem;
+  height: 7.075rem;
+  background-image: url(../assets/img/brand/jt.png);
+  -webkit-animation: rotate1 10s linear infinite;
+  animation: rotate1 10s linear infinite;
+}
 
-  .brand-container .wrap .mainbox .item .map .map3 {
-    width: 7.075rem;
-    height: 7.075rem;
-    background-image: url(../assets/img/brand/jt.png);
-    -webkit-animation: rotate1 10s linear infinite;
-    animation: rotate1 10s linear infinite;
-  }
+.brand-container .wrap .mainbox .item .panel {
+  position: relative;
+  height: 3.875rem;
+  border: 1px solid rgba(25, 186, 139, 0.17);
+  background: rgba(255, 255, 255, 0.04) url(../assets/img/brand/line.png);
+  padding: 0 0.1875rem 0;
+  margin-bottom: 0.1875rem;
+}
 
-  .brand-container .wrap .mainbox .item .panel {
-    position: relative;
-    height: 3.875rem;
-    border: 1px solid rgba(25, 186, 139, 0.17);
-    background: rgba(255, 255, 255, 0.04) url(../assets/img/brand/line.png);
-    padding: 0 0.1875rem 0;
-    margin-bottom: 0.1875rem;
-  }
+.brand-container .wrap .mainbox .item .panel:before {
+  position: absolute;
+  top: 0;
+  left: 0;
+  content: "";
+  width: 10px;
+  height: 10px;
+  border-top: 2px solid #02a6b5;
+  border-left: 2px solid #02a6b5;
+}
 
-  .brand-container .wrap .mainbox .item .panel:before {
-    position: absolute;
-    top: 0;
-    left: 0;
-    content: "";
-    width: 10px;
-    height: 10px;
-    border-top: 2px solid #02a6b5;
-    border-left: 2px solid #02a6b5;
-  }
+.brand-container .wrap .mainbox .item .panel:after {
+  position: absolute;
+  top: 0;
+  right: 0;
+  content: "";
+  width: 10px;
+  height: 10px;
+  border-top: 2px solid #02a6b5;
+  border-right: 2px solid #02a6b5;
+}
 
-  .brand-container .wrap .mainbox .item .panel:after {
-    position: absolute;
-    top: 0;
-    right: 0;
-    content: "";
-    width: 10px;
-    height: 10px;
-    border-top: 2px solid #02a6b5;
-    border-right: 2px solid #02a6b5;
-  }
+.brand-container .wrap .mainbox .item .panel .panel-footer {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+}
 
-  .brand-container .wrap .mainbox .item .panel .panel-footer {
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    width: 100%;
-  }
+.brand-container .wrap .mainbox .item .panel .panel-footer:before {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  content: "";
+  width: 10px;
+  height: 10px;
+  border-bottom: 2px solid #02a6b5;
+  border-left: 2px solid #02a6b5;
+}
 
-  .brand-container .wrap .mainbox .item .panel .panel-footer:before {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    content: "";
-    width: 10px;
-    height: 10px;
-    border-bottom: 2px solid #02a6b5;
-    border-left: 2px solid #02a6b5;
-  }
+.brand-container .wrap .mainbox .item .panel .panel-footer:after {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  content: "";
+  width: 10px;
+  height: 10px;
+  border-bottom: 2px solid #02a6b5;
+  border-right: 2px solid #02a6b5;
+}
 
-  .brand-container .wrap .mainbox .item .panel .panel-footer:after {
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    content: "";
-    width: 10px;
-    height: 10px;
-    border-bottom: 2px solid #02a6b5;
-    border-right: 2px solid #02a6b5;
-  }
+.brand-container .wrap .mainbox .item .panel h2 {
+  height: 0.6rem;
+  line-height: 0.6rem;
+  text-align: center;
+  color: #fff;
+  font-size: 0.225rem;
+  font-weight: 400;
+}
 
-  .brand-container .wrap .mainbox .item .panel h2 {
-    height: 0.6rem;
-    line-height: 0.6rem;
-    text-align: center;
-    color: #fff;
-    font-size: 0.225rem;
-    font-weight: 400;
-  }
+.brand-container .wrap .mainbox .item .panel h2 a {
+  margin: 0 0.1875rem;
+  color: #fff;
+  text-decoration: none;
+}
 
-  .brand-container .wrap .mainbox .item .panel h2 a {
-    margin: 0 0.1875rem;
-    color: #fff;
-    text-decoration: none;
-  }
+.brand-container .wrap .mainbox .item .panel .chart {
+  height: 3rem;
+}
+* {
+  height: 100%;
+  padding: 0px;
+  margin: 0px;
+}
 
-  .brand-container .wrap .mainbox .item .panel .chart {
-    height: 3rem;
+@-webkit-keyframes rotate {
+  from {
+    transform: translate(-50%, -50%) rotate(0deg);
   }
-  *{
-    height:100%;
-    padding:0px;
-    margin:0px;
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
   }
+}
 
-  @-webkit-keyframes rotate {
-    from {
-      transform: translate(-50%, -50%) rotate(0deg);
-    }
-    to {
-      transform: translate(-50%, -50%) rotate(360deg);
-    }
+@keyframes rotate {
+  from {
+    transform: translate(-50%, -50%) rotate(0deg);
   }
-
-  @keyframes rotate {
-    from {
-      transform: translate(-50%, -50%) rotate(0deg);
-    }
-    to {
-      transform: translate(-50%, -50%) rotate(360deg);
-    }
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
   }
+}
 
-  @-webkit-keyframes rotate1 {
-    from {
-      transform: translate(-50%, -50%) rotate(0deg);
-    }
-    to {
-      transform: translate(-50%, -50%) rotate(-360deg);
-    }
+@-webkit-keyframes rotate1 {
+  from {
+    transform: translate(-50%, -50%) rotate(0deg);
   }
-
-  @keyframes rotate1 {
-    from {
-      transform: translate(-50%, -50%) rotate(0deg);
-    }
-    to {
-      transform: translate(-50%, -50%) rotate(-360deg);
-    }
+  to {
+    transform: translate(-50%, -50%) rotate(-360deg);
   }
+}
 
-  @media screen and (max-width: 1024px) {
-    html {
-      font-size: 42px !important;
-    }
+@keyframes rotate1 {
+  from {
+    transform: translate(-50%, -50%) rotate(0deg);
   }
-
-  @media screen and (min-width: 1920) {
-    html {
-      font-size: 80px !important;
-    }
+  to {
+    transform: translate(-50%, -50%) rotate(-360deg);
   }
+}
 
+@media screen and (max-width: 1024px) {
+  html {
+    font-size: 42px !important;
+  }
+}
+
+@media screen and (min-width: 1920) {
+  html {
+    font-size: 80px !important;
+  }
+}
 </style>
