@@ -16,7 +16,8 @@
   "dependencies": {
     "@cnamts/vue-cli-plugin-proxy": "^2.2.1",
     "axios": "^0.21.1",
-    "echarts": "^4.4.0",
+    "echarts": "^5.3.1",
+    "echarts4": "npm:echarts@^4.4.0",
     "element-ui": "^2.15.3",
     "mockjs": "^1.1.0",
     "qs": "^6.5.2",

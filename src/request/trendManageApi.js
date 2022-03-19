@@ -35,7 +35,7 @@ export default {
     });
   },
 
-  // 根据级联查询趋势
+  // 根据所选的数组取出对应的名字
   getTrendByCas(flag) {
     return request({
       url: `/api/trend/casda/${flag}`,

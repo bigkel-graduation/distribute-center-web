@@ -82,12 +82,12 @@ const router = new Router({
         },
         {
           path: "/all/guiji",
-          name: guiji,
+          name: "guiji",
           component: guiji
         },
         {
           path: "/all/trendprediction",
-          name: trendprediction,
+          name: "trendprediction",
           component: trendprediction
         },
         {

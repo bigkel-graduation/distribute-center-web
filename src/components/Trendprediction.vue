@@ -74,10 +74,9 @@ export default {
     handleChange(val) {
       console.log("val", val);
       if (val.length != 0) {
-        console.log("casValue", this.casValue[1]);
         trendManageApi.getTrendByCas(this.casValue[1]).then(response => {
+          // 把名称给key，此时就相当与搜索框搜索key
           this.key = response.data.modelName;
-          console.log("key", this.key);
           this.getCenterBarData(this.key);
           this.getCenterCakeData(this.key);
         });
@@ -170,7 +169,7 @@ export default {
           {
             name: "访问次数", // 移动到饼图上提示的名称
             type: "pie", // 饼图类型
-            radius: ["25%", "75%"], // [饼图中心空白半径    饼图半径]
+            radius: ["40%", "75%"], // [饼图中心空白半径    饼图半径]
             center: [123, 130], // 饼图位置
             avoidLabelOverlap: false,
             itemStyle: {

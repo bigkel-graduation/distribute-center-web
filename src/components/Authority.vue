@@ -72,8 +72,8 @@
               >
             </div>
             <div style="margin-bottom:12px" class="text item">
-              <span style="color: rgb(16, 119, 255)">IP地址: </span>
-              {{ item.ip }}
+              <span style="color: rgb(16, 119, 255)">当前所在地: </span>
+              {{ item.toAddress }}
             </div>
             <div style="margin-bottom:12px" class="text item">
               <span style="color: rgb(16, 119, 255)">联系方式: </span>

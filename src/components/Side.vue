@@ -78,7 +78,7 @@ export default {
       //高级用户渲染
       if (this.role != "第三方用户") {
         //渲染一级菜单
-        (this.menuList1 = [
+        this.menuList1 = [
           {
             name: "用户管理",
             path: "/all/table",
@@ -90,7 +90,7 @@ export default {
             icon: "el-icon-s-data"
           },
           {
-            name: "数据分析",
+            name: "用户分布",
             path: "/all/dataAnalysis",
             icon: "el-icon-map-location"
           },
@@ -104,37 +104,13 @@ export default {
             path: "/all/trendprediction",
             icon: "el-icon-menu"
           },
-          {
-            name: "登录数据列表",
-            path: "/all/loginalllist",
-            icon: "el-icon-s-check"
-          },
+
           {
             name: "请求管理",
             path: "/all/Godemand",
             icon: "el-icon-s-data"
           }
-        ]),
-          //渲染包含二级菜单的项
-          (this.menuList2 = [
-            {
-              name: "访问数据列表",
-              path: "3",
-              icon: "el-icon-setting",
-              sub: [
-                {
-                  name: "个人数据列表",
-                  path: "/all/persondata",
-                  icon: ""
-                },
-                {
-                  name: "整体数据列表",
-                  path: "/all/alldata",
-                  icon: ""
-                }
-              ]
-            }
-          ]);
+        ];
       } else if (this.role == "第三方用户") {
         this.menuList1 = [
           {
