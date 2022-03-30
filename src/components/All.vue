@@ -11,37 +11,45 @@
       >
       <el-avatar
         src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"
-        style="float:right;margin-top: -40px;margin-right:120px;"
+        style="float:right;margin-top: -40px;margin-right:155px;"
       ></el-avatar>
-      <el-button
-        @click="quit()"
-        style="float:right;margin-top:-40px;margin-right: 4px;"
-        >退出登录</el-button
+      <el-badge
+        :value="notDealCount"
+        :max="99"
+        v-if="rolePid == 0 && notDealCount != 0"
+        style="float:right;margin-top: -36px;margin-right:67px;"
       >
+        <el-button @click="openMessage" type="primary" plain size="small"
+          >消息<i class="el-icon-bell el-icon--right"></i
+        ></el-button>
+      </el-badge>
+      <el-badge
+        v-if="rolePid == 0 && notDealCount == 0"
+        style="float:right;margin-top: -36px;margin-right:67px;"
+      >
+        <el-button
+          @click="openMessage"
+          type="primary"
+          plain
+          size="small"
+          :disabled="true"
+          >消息<i class="el-icon-bell el-icon--right"></i
+        ></el-button>
+      </el-badge>
+      <el-button
+        type="danger"
+        plain
+        size="small"
+        @click="quit()"
+        style="float:right;margin-top:-37px;margin-right: -15px;"
+        >退出<i class="el-icon-switch-button el-icon--right"></i
+      ></el-button>
     </el-header>
     <el-container>
       <el-aside style="width:190px;"><side></side></el-aside>
       <el-container class="app_content">
-        <!--头部区域-->
-        <!--  <el-header style="box-shadow: 0 1px 2px rgba(205,205,205,205);height: 30px;background-color: #00265f;margin-left: -8px;">  &lt;!&ndash;头部导航栏&ndash;&gt;
-          <el-avatar src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png" style="margin-top: 20px;margin-left: 1180px;"></el-avatar>
-           <div style="float:right;margin-top: 30px;margin-right: 0px;">
-             <el-dropdown>
-              <span class="el-dropdown-link">
-                用户名<i class="el-icon-arrow-down el-icon&#45;&#45;right"></i>
-              </span>
-               <el-dropdown-menu slot="dropdown">
-                 <el-dropdown-item>用户名</el-dropdown-item>
-                 <el-dropdown-item>电话</el-dropdown-item>
-                 <el-dropdown-item @click.native="quit()">退出登录</el-dropdown-item>
-               </el-dropdown-menu>
-             </el-dropdown>
-           </div>
-        </el-header>
-
-         内容区域 -->
         <el-main class="main">
-          <router-view />
+          <router-view v-if="isRouterAlive"></router-view>
         </el-main>
       </el-container>
     </el-container>
@@ -51,7 +59,15 @@
 <script>
 import side from "../components/Side.vue";
 import tabledata from "../components/Table.vue";
+import pleaseManageApi from "../request/pleaseManageApi";
 export default {
+  data() {
+    return {
+      notDealCount: 0,
+      rolePid: 0,
+      isRouterAlive: true
+    };
+  },
   name: "all",
   components: {
     side,
@@ -59,6 +75,15 @@ export default {
   },
   created() {
     document.body.parentNode.style.overflow = "hidden";
+    this.rolePid = window.localStorage.getItem("rolePid");
+    if (this.rolePid == 0) {
+      // 当登录用户为admin，则将admin放入websocket
+      this.connectSocket("admin");
+    }
+    // 获取消息数量，不然单靠websocket，刷新会变成0
+    pleaseManageApi.getMessageCount().then(response => {
+      this.notDealCount = response;
+    });
   },
   methods: {
     quit() {
@@ -67,6 +92,58 @@ export default {
       window.localStorage.setItem("userPhone", null);
       this.$message.success("欢迎您下次登录");
       this.$router.replace("/login");
+    },
+    openMessage() {
+      this.reload();
+      this.$router.replace("/all/pleaseManage");
+    },
+    // Side用来代表admin用户接收websocket的消息
+    initWebSocket() {
+      this.websocket.onerror = this.setErrorMessage;
+      this.websocket.onopen = this.setOnopenMessage;
+      this.websocket.onmessage = this.setOnmessageMessage;
+      this.websocket.onclose = this.setOncloseMessage;
+      window.onbeforeunload = this.onbeforeunload;
+    },
+    setErrorMessage() {
+      console.log(
+        "WebSocket连接发生错误   状态码：" + this.websocket.readyState
+      );
+    },
+    setOnopenMessage() {
+      console.log("WebSocket连接成功    状态码：" + this.websocket.readyState);
+    },
+    setOnmessageMessage(event) {
+      // 根据服务器推送的消息做自己的业务处理
+      console.log("admin收到: " + event.data);
+      this.notDealCount = parseInt(event.data);
+    },
+    setOncloseMessage() {
+      console.log("WebSocket连接关闭    状态码：" + this.websocket.readyState);
+    },
+    closeWebSocket() {
+      this.websocket.close();
+    },
+
+    onbeforeunload() {
+      this.closeWebSocket();
+    },
+    connectSocket(username) {
+      // WebSocket
+      if ("WebSocket" in window) {
+        this.websocket = new WebSocket(
+          "ws://localhost:8901/websocket/" + username
+        );
+        this.initWebSocket();
+      } else {
+        alert("当前浏览器 Not support websocket");
+      }
+    },
+    reload() {
+      this.isRouterAlive = false;
+      this.$nextTick(function() {
+        this.isRouterAlive = true;
+      });
     }
   }
 };

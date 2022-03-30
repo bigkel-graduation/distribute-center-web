@@ -16,7 +16,6 @@ Vue.prototype.$axios = axios;
 Vue.prototype.$echarts = echarts;
 Vue.prototype.$echarts4 = echarts4;
 
-/* eslint-disable no-new */
 new Vue({
   el: "#app",
   router,

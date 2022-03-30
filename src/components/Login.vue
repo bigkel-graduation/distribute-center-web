@@ -30,88 +30,29 @@
         </div>
       </div>
     </div>
-
-    <el-dialog
-      title="提示"
-      :visible.sync="dialogVisible"
-      width="30%"
-      :before-close="handleClose"
-    >
-      <span>由于您两次登录ip地址不同，请您进行一次人脸识别，谢谢</span>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="cameraPreviewOpen()">确定</el-button>
-      </span>
-    </el-dialog>
-    <CameraPreview
-      v-if="cameraPreviewVisible"
-      name="cameraPreview"
-      ref="cameraPreview"
-      @refreshCameraPhoto="refreshCameraPhoto"
-    ></CameraPreview>
   </div>
 </template>
 
 <script>
-import axios from "axios";
-import CameraPreview from "../components/cameraPreview.vue";
-import api from "../request/userManageApi";
+import userManageApi from "../request/userManageApi";
 export default {
-  inject: ["reload"],
   name: "login",
-  components: {
-    CameraPreview
-  },
   data() {
     return {
       info: {
         phone: "66666666666",
-        password: "admin",
-        ip: "115.159.55.236"
-      },
-      code: "",
-      cameraPreviewVisible: false,
-      dialogVisible: false,
-      picValueZero: ""
+        password: "admin"
+      }
     };
   },
   methods: {
     //登录事件
     loadBtn() {
-      // 我暂时就不模拟了，直接取
-      /* console.log(returnCitySN);*/
-      /*        if(this.info.phone.length==0||this.info.password.length==0){
-          this.$message.error("请输入完整用户名和密码");
-        }else{
-          var self=this;
-          axios.post('http://10.11.47.145:8081/User/login',this.info).then(res=>{
-            console.log(1);
-            console.log(res)
-            if(res.data.code==200){
-              this.$message.success(res.data.message);
-              var token = res.data.data.token;
-              var role="老板";
-              window.localStorage.setItem('token',token)
-              window.localStorage.setItem('role',role);
-              window.localStorage.setItem('userPhone',self.info.phone)
-              window.localStorage.setItem('affiliation',res.data.affiliation)
-              setTimeout(function (){
-                self.$router.replace('/all');
-              }, 800);
-            }else{
-              this.$message.error(res.data.message);
-            }
-          })
-        }*/
-      // 我暂时就不模拟了，直接取
-      /* console.log(returnCitySN);*/
-
       if (this.info.phone.length == 0 || this.info.password.length == 0) {
         this.$message.error("请输入完整用户名和密码");
       } else {
-        //axios发送请求
         self = this;
-        api.login(this.info).then(res => {
+        userManageApi.login(this.info).then(res => {
           if (res.code == 200) {
             this.$message.success(res.message);
             var data = res.data;
@@ -121,77 +62,14 @@ export default {
             window.localStorage.setItem("token", token);
             window.localStorage.setItem("rolePid", rolePid);
             window.localStorage.setItem("roleCid", roleCid);
-            window.localStorage.setItem("phone", self.info.phone);
             setTimeout(function() {
               self.$router.replace("/all");
             }, 400);
           } else {
             this.$message.error(res.message);
           }
-          if (res.code === 252) {
-            self.dialogVisible = true;
-          } /* else{
-                setTimeout(function (){
-                self.$router.replace('/all');
-              }, 800) */
         });
       }
-    },
-
-    cameraPreviewOpen(cameraType) {
-      this.dialogVisible = false;
-      this.cameraPreviewVisible = true;
-      this.$nextTick(() => {
-        this.$refs.cameraPreview.init();
-      });
-    },
-
-    handleClose(done) {
-      this.$confirm("确认关闭？")
-        .then(_ => {
-          done();
-        })
-        .catch(_ => {});
-    },
-
-    refreshCameraPhoto(cameraPhoto) {
-      let httpZp;
-
-      axios
-        .post("http://10.11.47.145:8081/User/face", {
-          face: cameraPhoto,
-          phone: self.info.phone,
-          password: self.info.password,
-          id: self.info.id,
-          mac: "mac4"
-        })
-        .then(res => {
-          if (res.data.code === 200) {
-            window.localStorage.setItem("token", res.data.data.token);
-            window.localStorage.setItem("userPhone", self.info.phone);
-            window.localStorage.setItem("role", "老板");
-            setTimeout(function() {
-              /*window.localStorage.setItem('role','老板')*/
-              self.$router.replace("/all");
-            }, 800);
-          }
-          httpZp = res.data.src;
-          this.picValueZero = cameraPhoto;
-        })
-        .catch(() => {});
-    },
-
-    //阻止表单提交
-    onSubmit() {
-      return false;
-    },
-
-    changelong() {
-      this.$refs.line.style.width = "183px";
-    },
-
-    changeshort() {
-      this.$refs.line.style.width = "0px";
     },
 
     transfer() {

@@ -12,31 +12,12 @@
         >
           <el-menu-item
             :index="item.path"
-            v-for="item in menuList1"
+            v-for="item in menuList"
             :key="item.path"
           >
             <i :class="item.icon"></i>
             <span slot="title" class="MenuText">{{ item.name }}</span>
           </el-menu-item>
-          <el-submenu
-            :index="item.path"
-            v-for="item in menuList2"
-            :key="item.path"
-          >
-            <template slot="title">
-              <i :class="item.icon"></i>
-              <span class="MenuText">{{ item.name }}</span>
-            </template>
-            <el-menu-item-group>
-              <el-menu-item
-                :index="item.path"
-                v-for="it in item.sub"
-                :key="it.path"
-                ><span class="MenuText">{{ it.name }}</span></el-menu-item
-              >
-            </el-menu-item-group>
-          </el-submenu>
-          <!-- <el-button plain @click.native="quit()" style="margin-top: 80px;margin-left: 40px;"><i class="el-icon-switch-button"></i><span style="margin-left: 10px;">退出登录</span></el-button>-->
         </el-menu>
       </el-col>
     </el-row>
@@ -48,15 +29,49 @@ export default {
   name: "side",
   data() {
     return {
-      menuList1: [], //一级菜单渲染
-      menuList2: [], //二级菜单渲染
-      role: ""
+      fixList: [
+        {
+          name: "用户管理",
+          path: "/all/table",
+          icon: "el-icon-s-custom"
+        },
+        {
+          name: "角色管理",
+          path: "/all/authority",
+          icon: "el-icon-s-data"
+        },
+        {
+          name: "用户分布",
+          path: "/all/dataAnalysis",
+          icon: "el-icon-map-location"
+        },
+        {
+          name: "轨迹图",
+          path: "/all/guiji",
+          icon: "el-icon-place"
+        },
+        {
+          name: "服务趋势",
+          path: "/all/trendprediction",
+          icon: "el-icon-menu"
+        }
+      ], // 固定菜单
+      menuList: [], //菜单渲染
+      rolePid: 0,
+      roleCid: 0,
+      notDealCount: 0
     };
   },
 
   created() {
-    this.role = window.localStorage.getItem("role");
+    this.rolePid = window.localStorage.getItem("rolePid");
+    this.roleCid = window.localStorage.getItem("roleCid");
     this.getMenuList();
+  },
+
+  // 页面关闭之前中断连接
+  beforeDestroy() {
+    this.onbeforeunload();
   },
 
   methods: {
@@ -76,49 +91,17 @@ export default {
     },
     getMenuList() {
       //高级用户渲染
-      if (this.role != "第三方用户") {
+      if (this.rolePid == 0) {
         //渲染一级菜单
-        this.menuList1 = [
-          {
-            name: "用户管理",
-            path: "/all/table",
-            icon: "el-icon-s-custom"
-          },
-          {
-            name: "角色管理",
-            path: "/all/authority",
-            icon: "el-icon-s-data"
-          },
-          {
-            name: "用户分布",
-            path: "/all/dataAnalysis",
-            icon: "el-icon-map-location"
-          },
-          {
-            name: "轨迹图",
-            path: "/all/guiji",
-            icon: "el-icon-place"
-          },
-          {
-            name: "服务趋势",
-            path: "/all/trendprediction",
-            icon: "el-icon-menu"
-          },
-
+        this.menuList = this.fixList.concat([
           {
             name: "请求管理",
-            path: "/all/Godemand",
+            path: "/all/pleaseManage",
             icon: "el-icon-s-data"
           }
-        ];
-      } else if (this.role == "第三方用户") {
-        this.menuList1 = [
-          {
-            name: "请求管理",
-            path: "/all/demand",
-            icon: "el-icon-s-data"
-          }
-        ];
+        ]);
+      } else {
+        this.menuList = this.fixList;
       }
     }
   }

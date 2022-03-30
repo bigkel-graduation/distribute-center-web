@@ -55,7 +55,6 @@
       :data="list"
       height="450"
       style="width:100%;margin-top: 10px;"
-      class="elTable"
       :cell-style="{ padding: '5px' }"
     >
       <el-table-column label="序号" width="50" align="center">
@@ -212,7 +211,7 @@ export default {
       editBox: false,
       radio: 3, // 3为选择省级，6为选择市级
       rowUser: {}, // 所选行的用户数据
-      rowPid: null,
+      rowPid: null, // 选择器会根据此值来显示
       rowCid: null,
       rolePid: 0, // 当前登录用户的pid
       roleCid: 0, // 当前登录用户的cid
@@ -303,7 +302,6 @@ export default {
         this.casValue[0] = this.rowPid;
         this.casValue[1] = this.rowCid;
       }
-      // this.getProvince(this.rolePid, this.roleCid);
     },
     handleChange(val) {
       if (val instanceof Array) {

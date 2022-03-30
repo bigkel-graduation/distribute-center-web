@@ -5,16 +5,12 @@ import all from "../components/All.vue";
 import NotFound from "../view/Error.vue";
 import tabledata from "../components/Table.vue";
 import dataAnalysis from "../components/DataAnalysis.vue";
-import alldata from "../view/Alldata.vue";
-import persondata from "../view/PersonData.vue";
-import demand from "../components/Demand.vue";
 import sanfang from "../view/Sanfang.vue";
 import guiji from "../components/GuiJi.vue";
-import godemand from "../components/GodDemand.vue";
-import loginalllist from "../components/LoginAllList.vue";
-import loginperlist from "../components/LoginPerList.vue";
 import authority from "../components/Authority.vue";
 import trendprediction from "../components/trendprediction";
+import waitdeal from "../view/waitDeal.vue";
+import pleaseManage from "../components/PleaseManage.vue";
 Vue.use(Router);
 
 const router = new Router({
@@ -29,6 +25,11 @@ const router = new Router({
       path: "/sanfang",
       name: "sanfang",
       component: sanfang
+    },
+    {
+      path: "/waitdeal",
+      name: "waitDeal",
+      component: waitdeal
     },
     {
       path: "/all",
@@ -50,36 +51,7 @@ const router = new Router({
           name: "dataAnalysis",
           component: dataAnalysis
         },
-        {
-          path: "/all/loginalllist",
-          name: "loginalllist",
-          component: loginalllist
-        },
-        {
-          path: "/all/loginperlist",
-          name: "loginperlist",
-          component: loginperlist
-        },
-        {
-          path: "/all/alldata",
-          name: "alldata",
-          component: alldata
-        },
-        {
-          path: "/all/persondata",
-          name: "persondata",
-          component: persondata
-        },
-        {
-          path: "/all/Godemand",
-          name: "Godemand",
-          component: godemand
-        },
-        {
-          path: "/all/demand",
-          name: "demand",
-          component: demand
-        },
+
         {
           path: "/all/guiji",
           name: "guiji",
@@ -91,8 +63,13 @@ const router = new Router({
           component: trendprediction
         },
         {
+          path: "/all/pleaseManage",
+          name: "pleaseManage",
+          component: pleaseManage
+        },
+        {
           path: "/all",
-          redirect: "/all/dataAnalysis"
+          redirect: "/all/trendprediction" // 登陆后默认页
         }
       ]
     },
@@ -111,6 +88,8 @@ router.beforeEach((to, from, next) => {
   if (to.path === "/login") {
     next();
   } else if (to.path === "/sanfang") {
+    next();
+  } else if (to.path === "/waitdeal") {
     next();
   } else {
     let token = localStorage.getItem("token");
