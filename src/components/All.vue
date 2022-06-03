@@ -1,23 +1,23 @@
 <template>
   <div>
-    <el-header style="background-color: #00265f">
+    <el-header style="background-color: rgb(1 30 73);height: 55px">
       <img
         src="../assets/分布式监测.png"
         style="width: 40px;height: 40px;margin-top: 7px;"
       />
       <span
-        style="color:#cecece;font-size: 22px;float:right;margin-right: 1295px;margin-top:13px;"
+        style="color:#cecece;font-size: 22px;float:right;margin-right: 1295px;margin-top:12px;"
         >分布式用户中心</span
       >
       <el-avatar
         src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"
-        style="float:right;margin-top: -40px;margin-right:155px;"
+        style="float:right;margin-top: -42px;margin-right:155px;"
       ></el-avatar>
       <el-badge
         :value="notDealCount"
         :max="99"
         v-if="rolePid == 0 && notDealCount != 0"
-        style="float:right;margin-top: -36px;margin-right:67px;"
+        style="float:right;margin-top: -39px;margin-right:67px;"
       >
         <el-button @click="openMessage" type="primary" plain size="small"
           >消息<i class="el-icon-bell el-icon--right"></i
@@ -25,7 +25,7 @@
       </el-badge>
       <el-badge
         v-if="rolePid == 0 && notDealCount == 0"
-        style="float:right;margin-top: -36px;margin-right:67px;"
+        style="float:right;margin-top: -39px;margin-right:67px;"
       >
         <el-button
           @click="openMessage"
@@ -41,12 +41,12 @@
         plain
         size="small"
         @click="quit()"
-        style="float:right;margin-top:-37px;margin-right: -15px;"
+        style="float:right;margin-top:-39px;margin-right: -15px;"
         >退出<i class="el-icon-switch-button el-icon--right"></i
       ></el-button>
     </el-header>
     <el-container>
-      <el-aside style="width:190px;"><side></side></el-aside>
+      <el-aside style="width:180px;"><side></side></el-aside>
       <el-container class="app_content">
         <el-main class="main">
           <router-view v-if="isRouterAlive"></router-view>

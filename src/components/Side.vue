@@ -97,7 +97,7 @@ export default {
           {
             name: "请求管理",
             path: "/all/pleaseManage",
-            icon: "el-icon-s-data"
+            icon: "el-icon-s-promotion"
           }
         ]);
       } else {
